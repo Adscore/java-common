@@ -35,7 +35,6 @@ class Signature4VerifierService {
       boolean isKeyBase64Encoded,
       Integer expiry,
       String[] ipAddresses) throws VerifyError, VersionError, ParseError {
-    key = isKeyBase64Encoded ? SignatureVerifierUtils.keyDecode(key) : key;
 
     Signature4VerificationResult validationResult = new Signature4VerificationResult();
 
@@ -78,40 +77,65 @@ class Signature4VerifierService {
       int requestTime = SignatureVerifierUtils.characterToInt(data.get("requestTime"));
 
       for (String result : results.keySet()) {
-
-        switch (signType) {
-          case 1:
-            String signatureBase =
+        boolean isValid = false;
+        String signatureBase =
                 getBase(result, requestTime, signatureTime, ipAddress, userAgent);
 
+        switch (signType) {
+          case 1: //HASH_SHA256
             boolean isHashedDataEqualToToken =
-                SignatureVerifierUtils.encode(key, signatureBase).equals(token);
+                SignatureVerifierUtils.encode(
+                        isKeyBase64Encoded ? SignatureVerifierUtils.keyDecode(key) : key,
+                        signatureBase).equals(token);
 
             if (isHashedDataEqualToToken) {
               if (isExpired(expiry, signatureTime, requestTime)) {
                 validationResult.setExpired(true);
                 return validationResult;
               }
-
-              validationResult.setScore(Integer.valueOf(result));
-              validationResult.setVerdict(results.get(result));
-              validationResult.setIpAddress(ipAddress);
-              validationResult.setRequestTime(
-                  Integer.parseInt(String.valueOf(data.get("requestTime"))));
-              validationResult.setSignatureTime(
-                  Integer.parseInt(String.valueOf(data.get("signatureTime"))));
-
-              return validationResult;
+              isValid = true;
+              break;
             }
             break;
-          case 2:
-            throw new VerifyError("unsupported signature");
+          case 2: //SIGN_SHA256
+            if (verifyData(signatureBase, token, key, isKeyBase64Encoded,"SHA256withECDSA")){
+              isValid = true;
+              break;
+            }
           default:
             throw new VerifyError("unrecognized signature");
+        }
+        if (isValid){
+          validationResult.setScore(Integer.valueOf(result));
+          validationResult.setVerdict(results.get(result));
+          validationResult.setIpAddress(ipAddress);
+          validationResult.setRequestTime(
+                  Integer.parseInt(String.valueOf(data.get("requestTime"))));
+          validationResult.setSignatureTime(
+                  Integer.parseInt(String.valueOf(data.get("signatureTime"))));
+
+          return validationResult;
         }
       }
     }
     throw new StructParseError("no verdict");
+  }
+
+  private boolean verifyData(String signatureBase, String token, String key, boolean isKeyBase64Encoded, String algorithm) throws VerifyError {
+    AsymOpenSSL crypt = new AsymOpenSSL(algorithm);
+
+    if (key.contains("BEGIN")){
+      key = key.replace("-----BEGIN PUBLIC KEY-----", "")
+              .replace("-----END PUBLIC KEY-----", "")
+              .replaceAll("\\s", "");
+    }
+
+    byte[] keyBytes = isKeyBase64Encoded ? Base64.getMimeDecoder().decode(key) : key.getBytes();
+    if(crypt.verify(signatureBase,token, keyBytes)){
+      throw new VerifyError("Signature verification error");
+    }
+
+    return true;
   }
 
   /**
