@@ -102,6 +102,7 @@ class Signature4VerifierService {
               isValid = true;
               break;
             }
+            break;
           default:
             throw new VerifyError("unrecognized signature");
         }
