@@ -24,7 +24,7 @@ dependencies {
     implementation 'com.marcospassos:phpserializer:0.8.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
     implementation 'org.msgpack:msgpack-core:0.9.8'
-    implementation 'com.github.seancfoley:ipaddress:5.2.1'
+    implementation 'com.github.seancfoley:ipaddress:5.5.0'
 }
 
 test {
