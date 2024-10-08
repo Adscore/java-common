@@ -13,26 +13,31 @@ class AsymOpenSSL {
         this.algorithm = algorithm;
     }
 
-    boolean verify(String data, String token, byte[] publicKey) throws VerifyError {
+    public boolean verify(String data, String signature, String publicKey) throws VerifyError {
         try {
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKey);
+            Signature sig = Signature.getInstance(this.algorithm);
+
             KeyFactory keyFactory = KeyFactory.getInstance("EC");
+            byte[] keyBytes = Base64.getDecoder().decode(publicKey);
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
             PublicKey pubKey = keyFactory.generatePublic(keySpec);
 
-            byte[] decodedData = Base64.getMimeDecoder().decode(data);
-            byte[] signInputBytes = token.getBytes(StandardCharsets.ISO_8859_1);
-            Signature sig = Signature.getInstance(this.algorithm);
             sig.initVerify(pubKey);
-            sig.update(decodedData);
-            return sig.verify(signInputBytes);
+            sig.update(data.getBytes());
+
+            byte[] signatureBytes = signature.getBytes(StandardCharsets.ISO_8859_1);
+
+            return sig.verify(signatureBytes);
+
         } catch (NoSuchAlgorithmException e) {
-            throw new VerifyError("wrong algorithm: " +e.getMessage());
+            throw new VerifyError("wrong algorithm: " + e.getMessage());
         } catch (InvalidKeySpecException e) {
-            throw new VerifyError("invalid spec key: " +e.getMessage());
+            throw new VerifyError("invalid spec key: " + e.getMessage());
         } catch (SignatureException e) {
-            throw new VerifyError("signature verify error: " +e.getMessage());
+            throw new VerifyError("signature verify error: " + e.getMessage());
         } catch (InvalidKeyException e) {
-            throw new VerifyError("invalid key: " +e.getMessage());
+            throw new VerifyError("invalid key: " + e.getMessage());
         }
     }
+
 }

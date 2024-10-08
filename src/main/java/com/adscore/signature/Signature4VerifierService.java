@@ -122,7 +122,7 @@ class Signature4VerifierService {
     throw new StructParseError("no verdict");
   }
 
-  private boolean verifyData(String signatureBase, String token, String key, boolean isKeyBase64Encoded, String algorithm) throws VerifyError {
+  private boolean verifyData(String data, String signature, String key, boolean isKeyBase64Encoded, String algorithm) throws VerifyError {
     AsymOpenSSL crypt = new AsymOpenSSL(algorithm);
 
     if (key.contains("BEGIN")){
@@ -131,12 +131,10 @@ class Signature4VerifierService {
               .replaceAll("\\s", "");
     }
 
-    byte[] keyBytes = isKeyBase64Encoded ? Base64.getMimeDecoder().decode(key) : key.getBytes();
-    if(crypt.verify(signatureBase,token, keyBytes)){
-      throw new VerifyError("Signature verification error");
+    if(crypt.verify(data, signature, key)){
+      return true;
     }
-
-    return true;
+    throw new VerifyError("Signature verification error");
   }
 
   /**
