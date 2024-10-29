@@ -10,7 +10,6 @@ public class Signature5ResponseMapper {
         mapAndRemoveIfExists(result, response, "zone_id", Signature5VerificationResult::setZoneId);
         mapAndRemoveIfExists(result, response, "data", Signature5VerificationResult::setData);
         mapAndRemoveIfExists(result, response, "b.tzoffset", Signature5VerificationResult::setTzOffset);
-        mapAndRemoveIfExists(result, response, "HsignatureTime", Signature5VerificationResult::setSignatureTime);
         mapAndRemoveIfExists(result, response, "b.sr.w", Signature5VerificationResult::setHorizontalResolution);
         mapAndRemoveIfExists(result, response, "result", Signature5VerificationResult::setResult);
         mapAndRemoveIfExists(result, response, "b.truech.model", Signature5VerificationResult::setTruechModel);
@@ -25,7 +24,8 @@ public class Signature5ResponseMapper {
         mapAndRemoveIfExists(result, response, "ipv4.v", Signature5VerificationResult::setIpv4V);
         mapAndRemoveIfExists(result, response, "ipv6.v", Signature5VerificationResult::setIpv6V);
         mapAndRemoveIfExists(result, response, "b.truech.bitness", Signature5VerificationResult::setTruechBitness);
-        mapAndRemoveIfExists(result, response, "b.trueloc.c", Signature5VerificationResult::setTrueUaLocation);
+        mapAndRemoveIfExists(result, response, "b.trueloc.c", Signature5VerificationResult::setTrueUaLocationC);
+        mapAndRemoveIfExists(result, response, "b.trueloc.s", Signature5VerificationResult::setTrueUaLoactionS);
         mapAndRemoveIfExists(result, response, "sub_id", Signature5VerificationResult::setSubId);
         mapAndRemoveIfExists(result, response, "b.trueua", Signature5VerificationResult::setTrueUa);
         mapAndRemoveIfExists(result, response, "b.truech.ua", Signature5VerificationResult::setTruechUa);
