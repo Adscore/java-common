@@ -52,6 +52,7 @@ class StructUnpacker {
 
     static Map<String, String> rfc3986Unpack(ByteBuffer data) throws StructParseError {
         try {
+            data.position(1).slice();
             String queryString = StandardCharsets.UTF_8.decode(data).toString();
             String decoded = decodeUrl(queryString);
             String[] pairs = decoded.split("&");

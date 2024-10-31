@@ -105,12 +105,12 @@ import java.util.Map;
      /**
       * Adscore True Location Country
       */
-     private String trueUaLocation;
+     private String trueUaLocationC;
 
      /**
       * Adscore True Location Confidence
       */
-     private Integer trueUaLoactionC;
+     private Integer trueUaLoactionS;
 
      /**
       * Adscore TrueUA-enriched Client Hints header Sec-CH-UA
@@ -170,7 +170,7 @@ import java.util.Map;
     /**
      * Signature time
      */
-     private String signatureTime;
+     private Long signatureTime;
 
     /**
      * Token
@@ -194,7 +194,7 @@ import java.util.Map;
      }
 
     void setSignatureTime(String signatureTime) {
-        this.signatureTime = signatureTime;
+        this.signatureTime = Long.valueOf(signatureTime);
     }
 
     void setSubId(String subId) {
@@ -269,12 +269,12 @@ import java.util.Map;
         this.trueUa = trueUa;
     }
 
-    void setTrueUaLocation(String trueUaLocation) {
-        this.trueUaLocation = trueUaLocation;
+    void setTrueUaLocationC(String trueUaLocationC) {
+        this.trueUaLocationC = trueUaLocationC;
     }
 
-    void setTrueUaLoactionC(String trueUaLoactionC) {
-        this.trueUaLoactionC = Integer.parseInt(trueUaLoactionC);
+    void setTrueUaLoactionS(String trueUaLoactionS) {
+        this.trueUaLoactionS = Integer.parseInt(trueUaLoactionS);
     }
 
     void setTruechUa(String truechUa) {
@@ -321,8 +321,12 @@ import java.util.Map;
         this.data = data;
     }
 
-    public void setToken(String token) {
+    void setToken(String token) {
         this.token = token;
+    }
+
+    void setIpv6Ip(String ipv6) {
+        this.ipv6Ip = ipv6Ip;
     }
 
 
@@ -410,12 +414,12 @@ import java.util.Map;
         return trueUa;
     }
 
-    public String getTrueUaLocation() {
-        return trueUaLocation;
+    public String getTrueUaLocationC() {
+        return trueUaLocationC;
     }
 
-    public Integer getTrueUaLoactionC() {
-        return trueUaLoactionC;
+    public Integer getTrueUaLoactionS() {
+        return trueUaLoactionS;
     }
 
     public String getTruechUa() {
@@ -462,15 +466,11 @@ import java.util.Map;
         return requestTime;
     }
 
-    public String getSignatureTime() {
+    public Long getSignatureTime() {
         return signatureTime;
     }
 
     public Map<String, String> getAdditionalData() {
         return additionalData;
-    }
-
-    public void setIpv6Ip(String ipv6) {
-        this.ipv6Ip = ipv6Ip;
     }
 }

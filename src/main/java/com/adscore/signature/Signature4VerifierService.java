@@ -255,7 +255,6 @@ class Signature4VerifierService {
 
     for (int i = 0; i < fieldNum; ++i) {
       Map<String, Object> header = PhpUnpack.unpack("CfieldId", signBB);
-      signBB.position(signBB.position()-1);
 
       if (header.entrySet().size() == 0 || !header.containsKey("fieldId")) {
         throw new SignatureParseError("premature end of signature 0x01");
@@ -268,7 +267,7 @@ class Signature4VerifierService {
 
       switch (fieldTypeDef.getType()) {
         case "uchar":
-          v = PhpUnpack.unpack("Cx/Cv", signBB);
+          v = PhpUnpack.unpack("Cv", signBB);
           if (v.containsKey("v")) {
             data.put(fieldTypeDef.getName(), v.get("v"));
           } else {
@@ -276,7 +275,7 @@ class Signature4VerifierService {
           }
           break;
         case "ushort":
-          v = PhpUnpack.unpack("Cx/nv", signBB);
+          v = PhpUnpack.unpack("nv", signBB);
           if (v.containsKey("v")) {
             data.put(fieldTypeDef.getName(), v.get("v"));
           } else {
@@ -284,8 +283,7 @@ class Signature4VerifierService {
           }
           break;
         case "ulong":
-          v = PhpUnpack.unpack("Cx/Nv", signBB);
-
+          v = PhpUnpack.unpack("Nv", signBB);
           if (v.containsKey("v")) {
             data.put(fieldTypeDef.getName(), v.get("v"));
           } else {
@@ -293,8 +291,7 @@ class Signature4VerifierService {
           }
           break;
         case "string":
-          l = PhpUnpack.unpack("Cx/nl", signBB);
-
+          l = PhpUnpack.unpack("nl", signBB);
           if (!l.containsKey("l")) {
             throw new SignatureParseError("premature end of signature 0x05");
           }
