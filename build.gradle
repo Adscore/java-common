@@ -1,15 +1,21 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'cl.franciscosolis.sonatype-central-upload' version '1.0.3'
 }
 
 group = 'com.adscore'
-version = '1.0.1'
+version = '1.0.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+    withJavadocJar()
+    withSourcesJar()
+    artifacts {
+        archives javadocJar, sourcesJar
     }
 }
 
@@ -29,4 +35,33 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+sonatypeCentralUpload {
+    def gradlePropertiesFile = file('.gradle/gradle.properties')
+    if (gradlePropertiesFile.exists()) {
+        gradlePropertiesFile.withInputStream { stream ->
+            def properties = new Properties()
+            properties.load(stream)
+            properties.each { key, value -> project.ext[key] = value }
+        }
+    }
+
+    //generate in Central Portal
+    username = project.findProperty("ossrhUsername")
+    password = project.findProperty("ossrhToken")
+
+    def projBuild = "build/libs/java-common-${version}.jar"
+    def javaDocBuild = "build/libs/java-common-${version}-javadoc.jar"
+    def sourceBuild = "build/libs/java-common-${version}-sources.jar"
+    archives = files(projBuild, javaDocBuild, sourceBuild)
+
+    pom = file("pom-default.xml")
+
+    signingKey= file('.gradle/key_priv.txt').text
+    signingKeyPassphrase = project.findProperty("signing.password")
+    def pub = "gpg --armor --export ${project.findProperty("signing.keyId")}".execute().text
+    publicKey = pub
+
+    publishingType = "MANUAL"
 }

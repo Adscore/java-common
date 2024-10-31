@@ -4,8 +4,6 @@ package com.adscore.signature;
 /**
  * Entry point of AdScore signature v4 verification library. It expose verify method allowing to verify
  * AdScore signature against given set of ipAddress(es) for given zone.
- *
- * @author Łukasz Hyła <lhyla@iterative.pl>
  */
 public class Signature4Verifier {
 
