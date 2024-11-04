@@ -37,14 +37,20 @@ JDK version >= 1.8 is required
 The easiest way to utilize the library is to attach it as a Maven dependency:
 
 ```maven
-TODO - IN PROGRESS
+<dependency>
+    <groupId>com.adscore</groupId>
+    <artifactId>java-common</artifactId>
+    <version>1.0.0</version>
+</dependency>
 ```
 
 or as a Gradle dependency:
 
 ```gradle
-TODO - IN PROGRESS
+implementation 'com.adscore:java-common:1.0.0'
 ```
+
+You can follow library here: https://central.sonatype.com/artifact/com.adscore/java-common
 
 <br><br>
 <h5>Maven/Gradle static file</h5>
